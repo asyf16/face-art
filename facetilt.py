@@ -72,11 +72,13 @@ while True:
         cv2.circle(frame, p1, 5, (0, 0, 255), -1)
         cv2.circle(frame, p2, 10, (0, 0, 255), -1)
 
-        cv2.circle(canvas, p2, 10, (0, 0, 255), -1)
+        cv2.line(canvas, (p2[0], p2[1] - 15), (p2[0], p2[1] + 15), (0, 0, 255), 3)
+        cv2.line(canvas, (p2[0] - 15, p2[1]), (p2[0] + 15, p2[1]), (0, 0, 255), 3)
 
+    small_frame = cv2.resize(frame, (w // 4, h // 4))
 
-    cv2.imshow("Head Pose", frame)
-    cv2.imshow("Canvas", canvas)
+    canvas[0:h // 4, 0:w // 4] = small_frame
+    cv2.imshow("Canvas with Camera", canvas)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
