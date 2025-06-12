@@ -1,11 +1,30 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+import speech_recognition as sr
+import threading
+import time
 
 mp_face_mesh = mp.solutions.face_mesh
+recognizer = sr.Recognizer()
+mic = sr.Microphone()
 face_mesh = mp_face_mesh.FaceMesh(static_image_mode=False, max_num_faces=1, refine_landmarks=True)
 
 cam = cv2.VideoCapture(1)
+
+def captureSpeech(recognizer, audio):
+    try:
+        text = recognizer.recognize_google(audio)
+        print("You said:", text)
+    except sr.UnknownValueError:
+        print("Could not understand audio")
+    except sr.RequestError as e:
+        print("Error", e)
+
+with mic as source:
+    recognizer.adjust_for_ambient_noise(source)
+
+stop_listening = recognizer.listen_in_background(mic, captureSpeech)
 
 FACE_IDX = {
     'nose_tip': 1,
